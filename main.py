@@ -1,7 +1,10 @@
 import pygame, sys, time
 from pygame.locals import *
 
-DISPLAYSURF = pygame.display.set_mode((650, 450), 0, 32)
+pygame.init()
+
+DISPLAYSURF = pygame.display.set_mode((600, 400), 0, 32)
+pygame.display.set_caption("Mania Parking")
 
 BLACK = (0,0,0)
 
@@ -11,4 +14,5 @@ while True:
         if event.type == QUIT:
             pygame.quit()
             sys.exit()
+
     pygame.display.update()
