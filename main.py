@@ -1,11 +1,24 @@
 import pygame, sys, time
 from pygame.locals import *
 from car import car
+from wall_up import wall_up
+from wall_left import wall_left
 
 pygame.init()
+
 ground = 175
-user = car(ground)
+coord = 0
 FPS = 50
+lives = 1
+
+wall = pygame.sprite.Group()
+
+user = car(ground)
+wall_u = wall_up(coord)
+wall_l = wall_left(coord)
+
+wall.add(wall_l)
+wall.add(wall_u)
 
 DISPLAYSURF = pygame.display.set_mode((700, 400), 0, 32)
 pygame.display.set_caption("Mania Parking")
@@ -16,18 +29,22 @@ BLACK = (0,0,0)
 def update_car():
     DISPLAYSURF.blit(user.image, user.rect)
 
+def update_u_wall():
+    DISPLAYSURF.blit(wall_u.image, wall_u.rect)
+
+def update_l_wall():
+    DISPLAYSURF.blit(wall_l.image, wall_l.rect)
+
 def check_walltouser_collision():
     global lives
-    if pygame.sprite.collide_rect(user, right):
-        if user.rect.x < 0:
-            lives = lives - 1
-        if user.rect.x > 618:
+    for ch in wall:
+        if pygame.sprite.collide_rect(ch, user):
             lives = lives - 1
 
 def display_message(text, x, y, s):
-    BASICFONT = pygame.font.Font('fressansbold.ttf', 16)
-    Surf = BASICFONT.render(text, 1, (0, 0, 0))
-    rect = surf.get_rect()
+    BASICFONT = pygame.font.Font('freesansbold.ttf', 16)
+    Surf = BASICFONT.render(text, 1, (255, 255, 255))
+    Rect = Surf.get_rect()
     Rect.topleft = (x,y)
     DISPLAYSURF.blit(Surf, Rect)
 
@@ -36,16 +53,9 @@ def game_over_dis():
     display_message('Press space to play again', 170, 180, 40)
     user.kill()
 
-def lives():
-    global lives
-
 left = False
 right = False
 run_game = True
-u_border_l = False
-u_border_r = False
-u_border_u = False
-u_border_d = False
 
 while True:
     if run_game == True:
@@ -53,21 +63,24 @@ while True:
     for event in pygame.event.get():
         if run_game == False:
             if event.type == KEYDOWN:
-                if event.key == K_SPACE:
+                if (event.key == K_SPACE):
                     run_game = True
                     user = car(ground)
                     lives = 1
 
         if run_game == True:
             if event.type == KEYDOWN:
-                if event.key == K_UP:
-                    right = True
                 if event.key == K_DOWN:
                     left = True
-            if event.type == KEYUP:
                 if event.key == K_UP:
+                    right = True
+                    
+            if event.type == KEYUP:
+                if event.key == K_SPACE:
+                    continue
+                if (event.key == K_UP):
                     right = False
-                if event.key == K_DOWN:
+                if (event.key == K_DOWN):
                     left = False
 
         if event.type == QUIT:
@@ -75,29 +88,15 @@ while True:
             sys.exit()
 
     if run_game == True:
-        if user.rect.x < 0:
-            u_border_l = True
-        if user.rect.x > 618:
-            u_border_r = True
-        if user.rect.x > 0:
-            u_border_l = False
-        if user.rect.x < 618:
-            u_border_r = False
-        if user.rect.y < 0:
-            u_border_u = True
-        if user.rect.y > 318:
-            u_border_d = True
-        if user.rect.y > 0:
-            u_border_u = False
-        if user.rect.y < 318:
-            u_border_d = False
-        if right == True and u_border_r == False:
+        if right == True:
             user.right()
-        if left == True and u_border_l == False:
+        if left == True:
             user.left()
 
-        check_walltouser_collision()
         update_car()
+        update_u_wall()
+        update_l_wall()
+        check_walltouser_collision()
 
         if lives == 0:
             run_game = False

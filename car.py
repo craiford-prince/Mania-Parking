@@ -10,7 +10,6 @@ class car(pygame.sprite.Sprite):
 
         self.x = 40
         self.y = ground
-        self.ground = ground
 
         self.image = CAR
         self.rect = pygame.Rect(self.x, self.y, 92, 52)
