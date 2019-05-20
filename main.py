@@ -3,11 +3,15 @@ from pygame.locals import *
 from car import car
 from wall_up import wall_up
 from wall_left import wall_left
+from wall_down import wall_down
+from wall_right import wall_right
 
 pygame.init()
 
 ground = 175
 coord = 0
+coord_y = 385
+coord2 = 686
 FPS = 50
 lives = 1
 
@@ -16,9 +20,13 @@ wall = pygame.sprite.Group()
 user = car(ground)
 wall_u = wall_up(coord)
 wall_l = wall_left(coord)
+wall_d = wall_down(coord_y)
+wall_r = wall_right(coord2)
 
 wall.add(wall_l)
 wall.add(wall_u)
+wall.add(wall_d)
+wall.add(wall_r)
 
 DISPLAYSURF = pygame.display.set_mode((700, 400), 0, 32)
 pygame.display.set_caption("Mania Parking")
@@ -34,6 +42,12 @@ def update_u_wall():
 
 def update_l_wall():
     DISPLAYSURF.blit(wall_l.image, wall_l.rect)
+
+def update_d_wall():
+    DISPLAYSURF.blit(wall_d.image, wall_d.rect)
+
+def update_r_wall():
+    DISPLAYSURF.blit(wall_r.image, wall_r.rect)
 
 def check_walltouser_collision():
     global lives
@@ -69,12 +83,14 @@ while True:
                     lives = 1
 
         if run_game == True:
+            left = False
+            right = False
             if event.type == KEYDOWN:
                 if event.key == K_DOWN:
                     left = True
                 if event.key == K_UP:
                     right = True
-                    
+
             if event.type == KEYUP:
                 if event.key == K_SPACE:
                     continue
@@ -96,6 +112,8 @@ while True:
         update_car()
         update_u_wall()
         update_l_wall()
+        update_d_wall()
+        update_r_wall()
         check_walltouser_collision()
 
         if lives == 0:

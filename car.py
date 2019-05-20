@@ -1,6 +1,7 @@
 import pygame, sys, time
 from pygame.locals import *
 
+
 CAR = pygame.image.load('Objects/car.png')
 
 class car(pygame.sprite.Sprite):
@@ -12,7 +13,7 @@ class car(pygame.sprite.Sprite):
         self.y = ground
 
         self.image = CAR
-        self.rect = pygame.Rect(self.x, self.y, 92, 52)
+        self.rect = pygame.Rect(self.x, self.y, 88, 52)
 
     def left(self):
         self.rect.x = self.rect.x - 5
