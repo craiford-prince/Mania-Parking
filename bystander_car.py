@@ -4,12 +4,12 @@ from pygame.locals import *
 B_CAR = pygame.image.load('Objects/bystander_car.png')
 
 class bystander_car(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, xground2 , yground2):
 
         super().__init__()
 
-        self.x = 40
-        self.y = 25
+        self.x = xground2
+        self.y = yground2
 
         self.image = B_CAR
 
