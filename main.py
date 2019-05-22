@@ -84,9 +84,21 @@ def game_over_dis():
     display_message('Press space to play again', 175, 200, 40)
     user.kill()
 
+def win_round1():
+    display_message('Congratulations!', 240, 120, 60)
+    display_message('Press Tab For Level 2', 175, 200, 40)
+    user.kill()
+
 left = False
 right = False
+win_borderR = False
+win_borderL = False
+win_borderU = False
+win_borderD = False
 run_game = True
+next_round = False
+run_game2 = False
+reset_game = False
 
 while True:
     if run_game == True:
@@ -125,6 +137,16 @@ while True:
             user.right()
         if left == True:
             user.left()
+        if user.rect.x > 555:
+            win_borderL = True
+        if user.rect.x < 620:
+            win_borderR = True
+        if user.rect.y > 110:
+            win_borderU = True
+        if user.rect.y < 220:
+            win_borderD = True
+        if win_borderL == True and win_borderR == True and win_borderU == True and win_borderD == True and right == False:
+            next_round = True
 
         update_car()
         update_u_wall()
@@ -148,6 +170,63 @@ while True:
         update_car()
         update_bcar()
         game_over_dis()
+
+    if next_round == True:
+        win_round1()
+
+        if run_game2 == False:
+            if event.type == KEYDOWN:
+                if (event.key == K_TAB):
+                    DISPLAYSURF.fill(GRAY)
+                    run_game2 == True
+                    user = car(ground)
+                    lives = 1
+
+        if run_game2 == True:
+            left = False
+            right = False
+            if event.type == KEYDOWN:
+                if event.key == K_DOWN:
+                    left = True
+                if event.key == K_UP:
+                    right = True
+
+            if event.type == KEYUP:
+                if event.key == K_TAB:
+                    continue
+                if event.key == K_UP:
+                    right = False
+                if event.key == K_DOWN:
+                    left = False
+
+        if event.type == QUIT:
+            pygame.quit()
+            sys.exit()
+
+    if run_game2 == True:
+        if right == True:
+            user.right()
+        if left == True:
+            user.left()
+        update_u_wall()
+        update_l_wall()
+        update_d_wall()
+        update_r_wall()
+        update_car()
+        update_bcar()
+
+        if lives == 0:
+            reset_game = True
+
+    if reset_game == True:
+        update_u_wall()
+        update_l_wall()
+        update_d_wall()
+        update_r_wall()
+        update_car()
+        update_bcar()
+        game_over_dis()
+
 
     pygame.display.update()
     fpsClock.tick(FPS)
