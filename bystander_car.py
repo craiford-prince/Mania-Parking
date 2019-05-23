@@ -1,6 +1,6 @@
 import pygame, sys, time
 from pygame.locals import *
-
+#random car
 B_CAR = pygame.image.load('Objects/bystander_car.png')
 
 class bystander_car(pygame.sprite.Sprite):
